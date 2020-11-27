@@ -25,8 +25,21 @@ namespace FarroRelay.Controllers
 		public async Task<IActionResult> getOrder(double po_number)
 		{
 			var order =  await _context.Purchase.Where(p => p.PO_Number == po_number)
-							.Join(_context.Branch, p=>p.Branch_Id, b=>b.Id, (p,b) => new { b.Name, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Status, p.Total_Amount})
-							.Join(_context.Card, p=>p.Supplier_Id, c=>c.Id, (p,c) => new { c.Company, p.Name, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Status, p.Total_Amount })
+							.Join(_context.Branch, p=>p.Branch_Id, b=>b.Id, (p,b) => new { b.Name, p.Id,p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Status, p.Total_Amount})
+							.Join(_context.Card, p=>p.Supplier_Id, c=>c.Id, (p,c) => new { c.Company, p.Id, p.Name, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Status, p.Total_Amount })
+							.Join(_context.EnumTable.Where(e=>e.Class == "purchase_order_status"), p=>p.Status, e=>e.Id,
+							(p,e)=>new OrderDto
+							{
+								Id = p.Id,
+								Branch = p.Name,
+								Supplier = p.Company,
+								PO_Number = p.PO_Number.ToString(),
+								Inv_Number = p.Inv_Number,
+								Date_Create = p.Date_Create,
+								Date_Invoiced = p.Date_Invoiced,
+								Status = e.Name,
+								Total_Amount = p.Total_Amount
+							})
 							.FirstOrDefaultAsync();
 			return Ok(order);
 		}
@@ -78,18 +91,19 @@ namespace FarroRelay.Controllers
 													(myfilter.To != null ? p.Date_Create <= myfilter.To : true)
 													&& 
 													(myfilter.PO_Number != null ? p.PO_Number.ToString().Contains(myfilter.PO_Number) : true))
-													.Join(_context.Branch, p => p.Branch_Id, b => b.Id, (p, b) => new { b.Name, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Status, p.Total_Amount })
-													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Status, p.Total_Amount })
-													.Select(p=>new OrderDto
+													.Join(_context.Branch, p => p.Branch_Id, b => b.Id, (p, b) => new { b.Name, p.Id,p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Status, p.Total_Amount })
+													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Status, p.Total_Amount })
+													.Join(_context.EnumTable.Where(e => e.Class == "purchase_order_status"), p => p.Status, e => e.Id,
+													(p, e)=>new OrderDto
 													{
-													
+														Id = p.Id,
 														Branch = p.Name,
 														Supplier = p.Company,
-														PO_Number = p.PO_Number,
+														PO_Number = p.PO_Number.ToString(),
 														Inv_Number = p.Inv_Number,
 														Date_Create = p.Date_Create,
 														Date_Invoiced = p.Date_Invoiced,
-														Status = p.Status,
+														Status = e.Name,
 														Total_Amount = p.Total_Amount
 													})
 													.ToListAsync();

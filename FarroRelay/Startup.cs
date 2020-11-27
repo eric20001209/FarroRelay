@@ -41,7 +41,8 @@ namespace FarroRelay
 			});
 			services.AddScoped<farroRelayContext>();
 			services.AddControllers()
-						.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver()); 
+						.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
+						; 
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

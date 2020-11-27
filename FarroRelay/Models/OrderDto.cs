@@ -10,11 +10,11 @@ namespace FarroRelay.Models
 		public int Id { get; set; }
 		public string Branch{ get; set; }
 		public string Supplier { get; set; }
-		public double PO_Number { get; set; }
+		public string PO_Number { get; set; }
 		public string Inv_Number { get; set; }
 		public DateTime Date_Create { get; set; }
 		public DateTime? Date_Invoiced { get; set; }
-		public int Status { get; set; }
+		public string Status { get; set; }
 		public decimal Total_Amount { get; set; }
 	}
 }

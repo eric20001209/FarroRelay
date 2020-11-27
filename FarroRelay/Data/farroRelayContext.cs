@@ -15,6 +15,7 @@ namespace FarroRelay.Data
 		}
 		public virtual DbSet<Branch> Branch { get; set; }
 		public virtual DbSet<Card> Card { get; set; }
+		public virtual DbSet<EnumTable> EnumTable{ get; set; }
 		public virtual DbSet<Purchase> Purchase { get; set; }
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -44,6 +45,13 @@ namespace FarroRelay.Data
 				.IsClustered();
 				entity.Property(e => e.Id).HasColumnName("id");
 				entity.Property(e => e.Company).HasColumnName("company");
+			});
+			modelBuilder.Entity<EnumTable>(entity =>
+			{
+				entity.ToTable("enum");
+				entity.Property(e => e.Class).HasColumnName("class");
+				entity.Property(e => e.Id).HasColumnName("id");
+				entity.Property(e => e.Name).HasColumnName("name");
 			});
 			modelBuilder.Entity<Purchase>(entity =>
 			{
