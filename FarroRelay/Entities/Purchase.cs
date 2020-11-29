@@ -12,9 +12,11 @@ namespace FarroRelay.Entities
 		public int? Supplier_Id{ get; set; }
 		public double PO_Number{ get; set; }
 		public string Inv_Number{ get; set; }
+		public int Type{ get; set; }
 		public DateTime Date_Create{ get; set; }
 		public DateTime? Date_Invoiced{ get; set; }
 		public int Status{ get; set; }
+		public byte Payment_Status{ get; set; }
 		public decimal Total_Amount{ get; set; }
 	}
 }

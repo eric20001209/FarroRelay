@@ -7,7 +7,7 @@ namespace FarroRelay.Models
 {
 	public class UpdateOrderDto
 	{
-		public int? Status{ get; set; }
+		public byte Status{ get; set; }
 		public string Inv_Number { get; set; }
 	}
 }

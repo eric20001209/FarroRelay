@@ -62,8 +62,10 @@ namespace FarroRelay.Data
 				entity.Property(e => e.PO_Number).HasColumnName("po_number");
 				entity.Property(e => e.Inv_Number).HasColumnName("inv_number");
 				entity.Property(e => e.Date_Create).HasColumnName("date_create").HasDefaultValueSql("getdate()");
+				entity.Property(e => e.Type).HasColumnName("type");
 				entity.Property(e => e.Date_Invoiced).HasColumnName("date_invoiced");
 				entity.Property(e => e.Status).HasColumnName("status");
+				entity.Property(e => e.Payment_Status).HasColumnName("payment_status").HasDefaultValueSql("(1)");
 				entity.Property(e => e.Total_Amount).HasColumnName("total_amount").HasDefaultValueSql("(0)");
 			});
 
