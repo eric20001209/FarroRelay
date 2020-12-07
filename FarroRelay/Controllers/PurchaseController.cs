@@ -32,6 +32,7 @@ namespace FarroRelay.Controllers
 							{
 								Id = p.Id,
 								Branch = p.Name,
+								Supplier_Id = p.Supplier_Id,
 								Supplier = p.Company,
 								PO_Number = p.PO_Number.ToString(),
 								Inv_Number = p.Inv_Number,
@@ -98,6 +99,7 @@ namespace FarroRelay.Controllers
 													{
 														Id = p.Id,
 														Branch = p.Name,
+														Supplier_Id = p.Supplier_Id,
 														Supplier = p.Company,
 														PO_Number = p.PO_Number.ToString(),
 														Inv_Number = p.Inv_Number,

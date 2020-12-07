@@ -9,6 +9,7 @@ namespace FarroRelay.Models
 	{
 		public int Id { get; set; }
 		public string Branch{ get; set; }
+		public int? Supplier_Id { get; set; }
 		public string Supplier { get; set; }
 		public string PO_Number { get; set; }
 		public string Inv_Number { get; set; }
