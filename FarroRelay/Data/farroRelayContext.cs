@@ -44,6 +44,7 @@ namespace FarroRelay.Data
 				.IsUnique()
 				.IsClustered();
 				entity.Property(e => e.Id).HasColumnName("id");
+				entity.Property(e => e.Corp_Number).HasColumnName("corp_number");
 				entity.Property(e => e.Company).HasColumnName("company");
 			});
 			modelBuilder.Entity<EnumTable>(entity =>

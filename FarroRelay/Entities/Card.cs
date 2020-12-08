@@ -8,6 +8,7 @@ namespace FarroRelay.Entities
 	public class Card
 	{
 		public int Id{ get; set; }
+		public string Corp_Number{ get; set; }
 		public string Company{ get; set; }
 	}
 }

@@ -26,13 +26,13 @@ namespace FarroRelay.Controllers
 		{
 			var order =  await _context.Purchase.Where(p => p.PO_Number == po_number)
 							.Join(_context.Branch, p=>p.Branch_Id, b=>b.Id, (p,b) => new { b.Name, p.Id,p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced,p.Type, p.Status, p.Payment_Status, p.Total_Amount})
-							.Join(_context.Card, p=>p.Supplier_Id, c=>c.Id, (p,c) => new { c.Company, p.Id, p.Name, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced,p.Type, p.Status,p.Payment_Status, p.Total_Amount })
+							.Join(_context.Card, p=>p.Supplier_Id, c=>c.Id, (p,c) => new { c.Company, c.Corp_Number, p.Id, p.Name, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced,p.Type, p.Status,p.Payment_Status, p.Total_Amount })
 							.Join(_context.EnumTable.Where(e=>e.Class == "purchase_order_status"), p=>p.Status, e=>e.Id,
 							(p,e)=>new OrderDto
 							{
 								Id = p.Id,
 								Branch = p.Name,
-								Supplier_Id = p.Supplier_Id,
+								Supplier_Id = p.Corp_Number,
 								Supplier = p.Company,
 								PO_Number = p.PO_Number.ToString(),
 								Inv_Number = p.Inv_Number,
@@ -93,13 +93,13 @@ namespace FarroRelay.Controllers
 													&& 
 													(myfilter.PO_Number != null ? p.PO_Number.ToString().Contains(myfilter.PO_Number) : true))
 													.Join(_context.Branch, p => p.Branch_Id, b => b.Id, (p, b) => new { b.Name, p.Id,p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Type, p.Status, p.Payment_Status,p.Total_Amount })
-													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced,p.Type, p.Status,p.Payment_Status, p.Total_Amount })
+													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, c.Corp_Number, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced,p.Type, p.Status,p.Payment_Status, p.Total_Amount })
 													.Join(_context.EnumTable.Where(e => e.Class == "purchase_order_status"), p => p.Status, e => e.Id,
 													(p, e)=>new OrderDto
 													{
 														Id = p.Id,
 														Branch = p.Name,
-														Supplier_Id = p.Supplier_Id,
+														Supplier_Id = p.Corp_Number,
 														Supplier = p.Company,
 														PO_Number = p.PO_Number.ToString(),
 														Inv_Number = p.Inv_Number,
