@@ -17,5 +17,6 @@ namespace FarroRelay.Models
 		public DateTime? Date_Invoiced { get; set; }
 		public string Status { get; set; }
 		public decimal Total_Amount { get; set; }
+		public decimal Total_Owed { get; set; }
 	}
 }

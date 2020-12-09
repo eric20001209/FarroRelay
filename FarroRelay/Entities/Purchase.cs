@@ -18,5 +18,6 @@ namespace FarroRelay.Entities
 		public int Status{ get; set; }
 		public byte Payment_Status{ get; set; }
 		public decimal Total_Amount{ get; set; }
+		public decimal Amount_Paid{ get; set; }
 	}
 }
