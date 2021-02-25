@@ -49,13 +49,14 @@ namespace FarroRelay.Controllers
 		
 
 		[HttpGet("orders")]
-		public async Task<IActionResult> getOders([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] string po)
+		public async Task<IActionResult> getOders([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] string po, [FromQuery] string keyword)
 		{
 			Filter myfilter = new Filter
 			{
 				From = from,
 				To = to,
-				PO_Number = po
+//				PO_Number = po,
+				Keyword = keyword
 			};
 
 			var orders = await getOrdersByFilter(myfilter);
@@ -92,7 +93,7 @@ namespace FarroRelay.Controllers
 													&&
 													(myfilter.To != null ? p.Date_Create <= myfilter.To : true)
 													&& 
-													(myfilter.PO_Number != null ? p.PO_Number.ToString().Contains(myfilter.PO_Number) : true))
+													(myfilter.Keyword != null ? p.PO_Number.ToString().Contains(myfilter.Keyword) || p.Inv_Number.Contains(myfilter.Keyword)  : true))
 													.Join(_context.Branch, p => p.Branch_Id, b => b.Id, (p, b) => new { b.Name, p.Id,p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Type, p.Status, p.Payment_Status,p.Total_Amount,p.Amount_Paid })
 													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, c.Corp_Number, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced,p.Type, p.Status,p.Payment_Status, p.Total_Amount,p.Amount_Paid })
 													.Join(_context.EnumTable.Where(e => e.Class == "purchase_order_status"), p => p.Status, e => e.Id,

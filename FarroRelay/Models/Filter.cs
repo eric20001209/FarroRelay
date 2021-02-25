@@ -7,7 +7,8 @@ namespace FarroRelay.Models
 {
 	public class Filter
 	{
-		public string PO_Number { get; set; }
+//		public string PO_Number { get; set; }
+		public string Keyword { get; set; }
 		public DateTime? From { get; set; }
 		public DateTime? To { get; set; }
 	}
