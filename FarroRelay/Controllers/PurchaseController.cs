@@ -55,14 +55,13 @@ namespace FarroRelay.Controllers
 			{
 				From = from,
 				To = to,
-//				PO_Number = po,
+				PO_Number = po,
 				Keyword = keyword
 			};
 
 			var orders = await getOrdersByFilter(myfilter);
 			return Ok(orders);
 		}
-
 		private async Task<List<OrderDto>> getOrdersByFilter(Filter myfilter)
 		{
 			//var orders = await (from p in _context.Purchase
@@ -93,7 +92,7 @@ namespace FarroRelay.Controllers
 													&&
 													(myfilter.To != null ? p.Date_Create <= myfilter.To : true)
 													&& 
-													(myfilter.Keyword != null ? p.PO_Number.ToString().Contains(myfilter.Keyword) || p.Inv_Number.Contains(myfilter.Keyword)  : true))
+													(p.PO_Number.ToString().Contains(myfilter.PO_Number)))
 													.Join(_context.Branch, p => p.Branch_Id, b => b.Id, (p, b) => new { b.Name, p.Id,p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Type, p.Status, p.Payment_Status,p.Total_Amount,p.Amount_Paid })
 													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, c.Corp_Number, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced,p.Type, p.Status,p.Payment_Status, p.Total_Amount,p.Amount_Paid })
 													.Join(_context.EnumTable.Where(e => e.Class == "purchase_order_status"), p => p.Status, e => e.Id,
@@ -114,6 +113,50 @@ namespace FarroRelay.Controllers
 													.ToListAsync();
 
 			return orders;
+		}
+
+		[HttpGet("invoices")]
+		public async Task<IActionResult> getInvoices([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] string inv, [FromQuery] string keyword)
+		{
+			Filter myfilter = new Filter
+			{
+				From = from,
+				To = to,
+				Inv_Number = inv,
+				Keyword = keyword
+			};
+			var orders = await getInvoicesByFilter(myfilter);
+			return Ok(orders);
+		}
+
+		private async Task<List<OrderDto>> getInvoicesByFilter(Filter myfilter)
+		{
+			var invs = await _context.Purchase.Where(p =>
+													(myfilter.From != null ? p.Date_Create >= myfilter.From : true)
+													&&
+													(myfilter.To != null ? p.Date_Create <= myfilter.To : true)
+													&&
+													(p.Inv_Number.Contains(myfilter.Inv_Number)))
+													.Join(_context.Branch, p => p.Branch_Id, b => b.Id, (p, b) => new { b.Name, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Type, p.Status, p.Payment_Status, p.Total_Amount, p.Amount_Paid })
+													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, c.Corp_Number, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Type, p.Status, p.Payment_Status, p.Total_Amount, p.Amount_Paid })
+													.Join(_context.EnumTable.Where(e => e.Class == "purchase_order_status"), p => p.Status, e => e.Id,
+													(p, e) => new OrderDto
+													{
+														Id = p.Id,
+														Branch = p.Name,
+														Supplier_Id = p.Corp_Number,
+														Supplier = p.Company,
+														PO_Number = p.PO_Number.ToString(),
+														Inv_Number = p.Inv_Number,
+														Date_Create = p.Date_Create,
+														Date_Invoiced = p.Date_Invoiced,
+														Status = (p.Type == 4 && p.Payment_Status == 1) ? "open bill" : ((p.Type == 4 && p.Payment_Status == 2) ? "closed bill" : e.Name),
+														Total_Amount = p.Total_Amount,
+														Total_Owed = p.Total_Amount - p.Amount_Paid
+													})
+													.ToListAsync();
+
+			return invs;
 		}
 
 		[HttpPatch("updatePurchase/{id}")]
