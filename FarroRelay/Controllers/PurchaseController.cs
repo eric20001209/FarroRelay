@@ -92,7 +92,7 @@ namespace FarroRelay.Controllers
 													&&
 													(myfilter.To != null ? p.Date_Create <= myfilter.To : true)
 													&& 
-													(p.PO_Number.ToString().Contains(myfilter.PO_Number)))
+													(myfilter.PO_Number != null?p.PO_Number.ToString().Contains(myfilter.PO_Number):true))
 													.Join(_context.Branch, p => p.Branch_Id, b => b.Id, (p, b) => new { b.Name, p.Id,p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Type, p.Status, p.Payment_Status,p.Total_Amount,p.Amount_Paid })
 													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, c.Corp_Number, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced,p.Type, p.Status,p.Payment_Status, p.Total_Amount,p.Amount_Paid })
 													.Join(_context.EnumTable.Where(e => e.Class == "purchase_order_status"), p => p.Status, e => e.Id,
@@ -136,7 +136,7 @@ namespace FarroRelay.Controllers
 													&&
 													(myfilter.To != null ? p.Date_Create <= myfilter.To : true)
 													&&
-													(p.Inv_Number.Contains(myfilter.Inv_Number)))
+													(myfilter.Inv_Number != null ? p.Inv_Number.Contains(myfilter.Inv_Number):true))
 													.Join(_context.Branch, p => p.Branch_Id, b => b.Id, (p, b) => new { b.Name, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Type, p.Status, p.Payment_Status, p.Total_Amount, p.Amount_Paid })
 													.Join(_context.Card, p => p.Supplier_Id, c => c.Id, (p, c) => new { p.Name, c.Company, c.Corp_Number, p.Id, p.Supplier_Id, p.PO_Number, p.Inv_Number, p.Date_Create, p.Date_Invoiced, p.Type, p.Status, p.Payment_Status, p.Total_Amount, p.Amount_Paid })
 													.Join(_context.EnumTable.Where(e => e.Class == "purchase_order_status"), p => p.Status, e => e.Id,
