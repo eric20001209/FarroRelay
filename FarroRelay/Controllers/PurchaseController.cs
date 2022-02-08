@@ -175,6 +175,7 @@ namespace FarroRelay.Controllers
 				var purchaseToPatch = new UpdateOrderDto
 				{
 					Status = orderToUpdate.Payment_Status,
+					Order_Status = orderToUpdate.Status,
 					Inv_Number = orderToUpdate.Inv_Number,
 					Amount_Paid = orderToUpdate.Amount_Paid 
 				};
@@ -184,6 +185,7 @@ namespace FarroRelay.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 				orderToUpdate.Payment_Status = purchaseToPatch.Status ;
+				orderToUpdate.Status = purchaseToPatch.Order_Status;
 				orderToUpdate.Inv_Number = purchaseToPatch.Inv_Number;
 				orderToUpdate.Amount_Paid = orderToUpdate.Amount_Paid + purchaseToPatch.Amount_Paid ;
 				await _context.SaveChangesAsync();
